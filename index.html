@@ -1,212 +1,190 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AFE - Asociación Futsal Esquel</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <style>
-        :root {
-            --naranja-afe: #ff8c00; /* Color de la barra del afiche */
-            --blanco: #ffffff;
-            --gris-fondo: #f4f4f4;
-            --negro: #1a1a1a;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AFE - Asociación Futsal Esquel</title>
 
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            margin: 0;
-            background-color: var(--gris-fondo);
-            color: var(--negro);
-        }
+<!-- Iconos (Actualizar con los de la AFE en Cloudflare R2 si deseas) -->
+<link rel="icon" type="image/png" href="https://zycbdurfowmflttkrxaf.supabase.co/storage/v1/object/public/logos/afe-logo.png">
 
-        /* --- HEADER --- */
-        header {
-            background: var(--blanco);
-            padding: 1.5rem;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        header h1 {
-            margin: 0;
-            color: var(--naranja-afe);
-            text-transform: uppercase;
-            font-size: 1.8rem;
-        }
+<style>
+/* Basado en referencia TecnoStore */
+body { margin:0; background:#f5f5f7; font-family: 'Inter', sans-serif; }
 
-        /* --- BARRA DE PESTAÑAS (CATEGORÍAS) --- */
-        nav.categorias-nav {
-            background: var(--blanco);
-            border-bottom: 4px solid var(--naranja-afe);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            overflow-x: auto; /* Para que en celular se deslice de costado */
-            white-space: nowrap;
-            display: flex;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
+/* COLOR NARANJA AFE */
+.navbar { background: #ff8c00; } 
 
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 15px 20px;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            cursor: pointer;
-            color: #666;
-            transition: all 0.3s;
-            position: relative;
-        }
+/* NAV LINKS / PESTAÑAS */
+.nav-link {
+    position: relative;
+    padding: 10px 4px;
+    text-align: center;
+    transition: 0.3s;
+    font-size: 11px;
+    font-weight: 700;
+}
+.nav-link::after {
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:0;
+    width:0%;
+    height:3px;
+    background:white;
+    transition:0.3s;
+}
+.nav-link.active::after { width:100%; }
 
-        .tab-btn:hover { color: var(--naranja-afe); }
+/* SLIDER */
+.slider { height:60vh; position:relative; overflow:hidden; background: #000; }
+.slide { position:absolute; width:100%; height:100%; opacity:0; transition:1s; }
+.slide.active { opacity:1; }
+.slide img { width:100%; height:100%; object-fit:cover; opacity: 0.8; }
 
-        .tab-btn.active {
-            color: var(--naranja-afe);
-        }
+/* BADGE CATEGORIA */
+.cat-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #ff8c00;
+    color: white;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
 
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--naranja-afe);
-        }
-
-        /* --- CONTENIDO --- */
-        .container {
-            max-width: 1200px;
-            margin: 25px auto;
-            padding: 0 15px;
-        }
-
-        .grid-equipos {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 20px;
-        }
-
-        /* Tarjeta Estilo TecnoStore */
-        .card {
-            background: var(--blanco);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border: 1px solid #eee;
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .card:hover { transform: translateY(-5px); }
-
-        .img-box {
-            aspect-ratio: 1/1;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-
-        .info { padding: 12px; border-top: 1px solid #f0f0f0; background: #fafafa; }
-
-        .nombre-equipo { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
-
-        #loader { text-align: center; padding: 50px; font-weight: bold; color: var(--naranja-afe); }
-
-        @media (max-width: 480px) {
-            nav.categorias-nav { justify-content: flex-start; }
-            .grid-equipos { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        }
-    </style>
+@media (max-width:768px){
+    .slider{ height:50vh; }
+    .navbar-logo-mobile { background:#ff8c00; }
+    .navbar-menu-mobile {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Ajuste para que entren bien las divisiones */
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <header>
-        <h1>AFE ESQUEL</h1>
-        <p>Asociación Futsal Esquel</p>
-    </header>
+<!-- NAVBAR ESTILO TECNOSTORE -->
+<header class="navbar sticky top-0 z-50 shadow-lg">
 
-    <nav class="categorias-nav">
-        <button class="tab-btn active" onclick="filtrar('TODOS')">TODOS</button>
-        <button class="tab-btn" onclick="filtrar('HONOR')">HONOR</button>
-        <button class="tab-btn" onclick="filtrar('DIVISION A')">DIVISIÓN A</button>
-        <button class="tab-btn" onclick="filtrar('DIVISION B')">DIVISIÓN B</button>
-        <button class="tab-btn" onclick="filtrar('DIVISION C')">DIVISIÓN C</button>
-        <button class="tab-btn" onclick="filtrar('FEMENINO')">FEMENINO</button>
-    </nav>
+    <!-- DESKTOP -->
+    <div class="hidden md:flex items-center justify-between px-6 py-3">
+        <div class="cursor-pointer">
+            <h1 class="text-white font-black text-2xl">AFE ESQUEL</h1>
+        </div>
 
-    <div class="container">
-        <div id="loader">Cargando equipos...</div>
-        <div class="grid-equipos" id="lista-equipos"></div>
+        <div class="flex gap-4 text-white items-center">
+            <button onclick="filtrar('TODOS')" class="nav-link active" id="btn-todos">INICIO</button>
+            <button onclick="filtrar('HONOR')" class="nav-link">HONOR</button>
+            <button onclick="filtrar('DIVISION A')" class="nav-link">DIVISION A</button>
+            <button onclick="filtrar('DIVISION B')" class="nav-link">DIVISION B</button>
+            <button onclick="filtrar('DIVISION C')" class="nav-link">DIVISION C</button>
+            <button onclick="filtrar('FEMENINO')" class="nav-link">FEMENINO</button>
+        </div>
     </div>
 
-    <script>
-        const SUPABASE_URL = 'https://zycbdurfowmflttkrxaf.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_6O7PzB02VgmvuRc2pmz8UA_wferbeGH';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <!-- MOBILE (PESTAÑAS QUE PEDISTE) -->
+    <div class="md:hidden flex flex-col w-full">
+        <div class="navbar-logo-mobile py-4 text-center">
+            <h1 class="text-white font-black text-xl">AFE ESQUEL</h1>
+        </div>
 
-        let todosLosEquipos = [];
+        <div class="navbar-menu-mobile text-white bg-orange-600">
+            <button onclick="filtrar('TODOS')" class="nav-link active">INICIO</button>
+            <button onclick="filtrar('HONOR')" class="nav-link">HONOR</button>
+            <button onclick="filtrar('DIVISION A')" class="nav-link">DIV. A</button>
+            <button onclick="filtrar('DIVISION B')" class="nav-link">DIV. B</button>
+            <button onclick="filtrar('DIVISION C')" class="nav-link">DIV. C</button>
+            <button onclick="filtrar('FEMENINO')" class="nav-link">FEM</button>
+        </div>
+    </div>
 
-        async function cargarDatos() {
-            const { data, error } = await _supabase
-                .from('equipos')
-                .select('*')
-                .order('nombre', { ascending: true });
+</header>
 
-            if (error) {
-                console.error(error);
-                return;
-            }
+<!-- SLIDER TEMPORADA 2026 -->
+<section id="slider-home" class="slider">
+    <div class="slide active">
+        <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=2000">
+        <div class="absolute inset-0 flex items-center justify-center">
+            <h2 class="text-white text-4xl md:text-6xl font-black italic">CLAUSURA 2026</h2>
+        </div>
+    </div>
+</section>
 
-            todosLosEquipos = data;
-            mostrarEquipos(todosLosEquipos);
-            document.getElementById('loader').style.display = 'none';
-        }
+<!-- CONTENEDOR DE EQUIPOS -->
+<main class="max-w-7xl mx-auto px-4 py-10">
+    <div id="equipos-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <!-- Se carga desde Supabase -->
+    </div>
+</main>
 
-        function mostrarEquipos(lista) {
-            const container = document.getElementById('lista-equipos');
-            container.innerHTML = ''; // Limpiar pantalla
+<script>
+// TUS CREDENCIALES
+const SUPABASE_URL = 'https://zycbdurfowmflttkrxaf.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_6O7PzB02VgmvuRc2pmz8UA_wferbeGH';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-            lista.forEach(equipo => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="img-box">
-                        <img src="${equipo.escudo_url || 'https://via.placeholder.com/150?text=AFE'}" alt="${equipo.nombre}">
-                    </div>
-                    <div class="info">
-                        <span class="nombre-equipo">${equipo.nombre}</span>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
+let todosLosEquipos = [];
 
-        function filtrar(categoria) {
-            // Cambiar estado visual de las pestañas
-            const botones = document.querySelectorAll('.tab-btn');
-            botones.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+async function cargarEquipos(){
+    const { data, error } = await supabaseClient
+        .from('equipos')
+        .select('*')
+        .order('nombre', { ascending: true });
+    
+    if (error) {
+        console.error("Error cargando equipos:", error);
+        return;
+    }
 
-            // Filtrar lógica
-            if (categoria === 'TODOS') {
-                mostrarEquipos(todosLosEquipos);
-            } else {
-                const filtrados = todosLosEquipos.filter(e => e.categoria === categoria);
-                mostrarEquipos(filtrados);
-            }
-        }
+    todosLosEquipos = data;
+    renderizar(todosLosEquipos);
+}
 
-        document.addEventListener('DOMContentLoaded', cargarDatos);
-    </script>
+function renderizar(lista){
+    const grid = document.getElementById('equipos-grid');
+    grid.innerHTML = '';
+    
+    lista.forEach(equipo => {
+        grid.innerHTML += `
+        <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all border border-gray-100 flex flex-col items-center text-center">
+            <span class="cat-badge">${equipo.categoria}</span>
+            <div class="h-32 w-full flex items-center justify-center mb-3">
+                <img src="${equipo.escudo_url || 'https://via.placeholder.com/150?text=AFE'}" 
+                     class="max-h-full max-w-full object-contain">
+            </div>
+            <h3 class="font-bold text-sm uppercase text-gray-800">${equipo.nombre}</h3>
+            <button class="mt-4 w-full bg-gray-100 text-gray-600 py-2 rounded-xl text-xs font-bold hover:bg-orange-500 hover:text-white transition">
+                VER FICHA
+            </button>
+        </div>`;
+    });
+}
+
+function filtrar(categoria){
+    // Cambiar estado visual de botones[cite: 1]
+    const btns = document.querySelectorAll('.nav-link');
+    btns.forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+
+    if(categoria === 'TODOS') {
+        renderizar(todosLosEquipos);
+    } else {
+        const filtrados = todosLosEquipos.filter(e => e.categoria === categoria);
+        renderizar(filtrados);
+    }
+}
+
+// Inicializar
+cargarEquipos();
+</script>
+
 </body>
 </html>
