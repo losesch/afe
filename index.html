@@ -9,278 +9,139 @@
     
     <style>
         :root {
-            /* Colores inspirados en el poster de fixture (image_0.png) */
-            --naranja-afe: #ff8c00; /* Color vibrante de la barra superior */
-            --naranja-oscuro: #e67e00; /* Para estados hover en el menú */
-            --gris-fondo: #fcfcfc;
+            --naranja-afe: #ff8c00; /* Color de la barra del afiche */
             --blanco: #ffffff;
-            --negro-suave: #2d3436;
-            --gris-borde: #eeeeee;
+            --gris-fondo: #f4f4f4;
+            --negro: #1a1a1a;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
             background-color: var(--gris-fondo);
-            color: var(--negro-suave);
-            padding-bottom: 50px; /* Espacio para el menú móvil */
+            color: var(--negro);
         }
 
-        /* --- HEADER PRINCIPAL --- */
-        header.main-header {
+        /* --- HEADER --- */
+        header {
             background: var(--blanco);
-            padding: 1.5rem 1rem;
+            padding: 1.5rem;
             text-align: center;
-            border-bottom: 1px solid var(--gris-borde);
+            border-bottom: 1px solid #ddd;
         }
 
-        header.main-header h1 {
+        header h1 {
             margin: 0;
-            font-size: 2rem;
-            letter-spacing: -1px;
             color: var(--naranja-afe);
             text-transform: uppercase;
-            font-weight: 800;
+            font-size: 1.8rem;
         }
 
-        header.main-header p {
-            margin: 5px 0 0;
-            color: #636e72;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        /* --- BARRA DE NAVEGACIÓN (PESTAÑAS) - ESCRITORIO --- */
-        nav.main-nav {
-            background-color: var(--blanco);
-            border-bottom: 4px solid var(--naranja-afe); /* Barra naranja inferior */
+        /* --- BARRA DE PESTAÑAS (CATEGORÍAS) --- */
+        nav.categorias-nav {
+            background: var(--blanco);
+            border-bottom: 4px solid var(--naranja-afe);
             position: sticky;
             top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            z-index: 1000;
+            overflow-x: auto; /* Para que en celular se deslice de costado */
+            white-space: nowrap;
             display: flex;
             justify-content: center;
-            padding: 0 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        .nav-tabs {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-
-        .nav-tabs li a {
-            display: block;
-            padding: 15px 25px;
-            text-decoration: none;
-            color: var(--negro-suave);
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 15px 20px;
             font-weight: 700;
             text-transform: uppercase;
             font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s;
             position: relative;
         }
 
-        /* Estado Hover y Activo */
-        .nav-tabs li a:hover,
-        .nav-tabs li a.active {
+        .tab-btn:hover { color: var(--naranja-afe); }
+
+        .tab-btn.active {
             color: var(--naranja-afe);
         }
 
-        .nav-tabs li a.active::after {
+        .tab-btn.active::after {
             content: '';
             position: absolute;
-            bottom: -4px; /* Alineado con el borde inferior */
+            bottom: -4px;
             left: 0;
             width: 100%;
             height: 4px;
-            background-color: var(--naranja-afe);
+            background: var(--naranja-afe);
         }
 
-        /* --- MENÚ MÓVIL (BOTTOM BAR) --- */
-        .mobile-nav {
-            display: none; /* Oculto en escritorio */
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--blanco);
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            border-top: 1px solid var(--gris-borde);
-        }
-
-        .mobile-nav-container {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-        }
-
-        .mobile-nav-item {
-            text-decoration: none;
-            color: var(--gris-texto);
-            text-align: center;
-            flex: 1;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .mobile-nav-item.active {
-            color: var(--naranja-afe);
-        }
-
-        /* Iconos simples (usando texto para no depender de librerías) */
-        .mobile-icon {
-            font-size: 1.4rem;
-            display: block;
-            margin-bottom: 2px;
-        }
-
-        /* --- CONTENIDO PRINCIPAL --- */
+        /* --- CONTENIDO --- */
         .container {
             max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+            margin: 25px auto;
+            padding: 0 15px;
         }
 
-        /* Grid de Equipos (Responsive) */
         .grid-equipos {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
         }
 
         /* Tarjeta Estilo TecnoStore */
         .card {
             background: var(--blanco);
-            border-radius: 20px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(0,0,0,0.03);
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+            text-align: center;
+            transition: transform 0.3s;
         }
 
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
+        .card:hover { transform: translateY(-5px); }
 
         .img-box {
-            aspect-ratio: 1 / 1;
-            padding: 20px;
-            background: #fff;
+            aspect-ratio: 1/1;
+            padding: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .img-box img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
+        .img-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-        .info {
-            padding: 15px;
-            text-align: center;
-            background: #fafafa;
-            border-top: 1px solid #f0f0f0;
-            flex-grow: 1;
-        }
+        .info { padding: 12px; border-top: 1px solid #f0f0f0; background: #fafafa; }
 
-        .nombre-equipo {
-            font-weight: 800;
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-            display: block;
-            text-transform: uppercase;
-            color: var(--negro-suave);
-        }
+        .nombre-equipo { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; }
 
-        .categoria-badge {
-            display: inline-block;
-            background: var(--naranja-afe);
-            color: white;
-            font-size: 0.7rem;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
+        #loader { text-align: center; padding: 50px; font-weight: bold; color: var(--naranja-afe); }
 
-        /* Pantalla de carga */
-        #loader {
-            text-align: center;
-            padding: 100px 0;
-            font-weight: 600;
-            color: var(--naranja-afe);
-        }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 768px) {
-            header.main-header { padding: 1rem; }
-            header.main-header h1 { font-size: 1.6rem; }
-            
-            nav.main-nav { display: none; } /* Ocultar menú escritorio */
-            .mobile-nav { display: block; } /* Mostrar menú móvil */
-            
-            .container { margin: 20px auto; padding: 0 15px; }
-            .grid-equipos {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
+        @media (max-width: 480px) {
+            nav.categorias-nav { justify-content: flex-start; }
+            .grid-equipos { grid-template-columns: repeat(2, 1fr); gap: 12px; }
         }
     </style>
 </head>
 <body>
 
-    <header class="main-header">
+    <header>
         <h1>AFE ESQUEL</h1>
         <p>Asociación Futsal Esquel</p>
     </header>
 
-    <nav class="main-nav">
-        <div class="nav-container">
-            <ul class="nav-tabs">
-                <li><a href="index.html" class="active">Inicio</a></li>
-                <li><a href="#">Torneos</a></li>
-                <li><a href="#">Fixture</a></li>
-                <li><a href="#">Equipos</a></li>
-                <li><a href="#">Noticias</a></li>
-                <li><a href="#">Institucional</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <nav class="mobile-nav">
-        <div class="mobile-nav-container">
-            <a href="index.html" class="mobile-nav-item active">
-                <span class="mobile-icon">🏠</span>
-                Inicio
-            </a>
-            <a href="#" class="mobile-nav-item">
-                <span class="mobile-icon">🏆</span>
-                Torneos
-            </a>
-            <a href="#" class="mobile-nav-item">
-                <span class="mobile-icon">📅</span>
-                Fixture
-            </a>
-            <a href="#" class="mobile-nav-item">
-                <span class="mobile-icon">🛡️</span>
-                Equipos
-            </a>
-        </div>
+    <nav class="categorias-nav">
+        <button class="tab-btn active" onclick="filtrar('TODOS')">TODOS</button>
+        <button class="tab-btn" onclick="filtrar('HONOR')">HONOR</button>
+        <button class="tab-btn" onclick="filtrar('DIVISION A')">DIVISIÓN A</button>
+        <button class="tab-btn" onclick="filtrar('DIVISION B')">DIVISIÓN B</button>
+        <button class="tab-btn" onclick="filtrar('DIVISION C')">DIVISIÓN C</button>
+        <button class="tab-btn" onclick="filtrar('FEMENINO')">FEMENINO</button>
     </nav>
 
     <div class="container">
@@ -289,60 +150,63 @@
     </div>
 
     <script>
-        // Tus credenciales de Supabase
         const SUPABASE_URL = 'https://zycbdurfowmflttkrxaf.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_6O7PzB02VgmvuRc2pmz8UA_wferbeGH';
-        
-        // Inicializar Cliente
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function init() {
+        let todosLosEquipos = [];
+
+        async function cargarDatos() {
+            const { data, error } = await _supabase
+                .from('equipos')
+                .select('*')
+                .order('nombre', { ascending: true });
+
+            if (error) {
+                console.error(error);
+                return;
+            }
+
+            todosLosEquipos = data;
+            mostrarEquipos(todosLosEquipos);
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        function mostrarEquipos(lista) {
             const container = document.getElementById('lista-equipos');
-            const loader = document.getElementById('loader');
+            container.innerHTML = ''; // Limpiar pantalla
 
-            try {
-                // Obtener datos de Supabase
-                const { data: equipos, error } = await _supabase
-                    .from('equipos')
-                    .select('*')
-                    .order('categoria', { ascending: true })
-                    .order('nombre', { ascending: true });
+            lista.forEach(equipo => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="img-box">
+                        <img src="${equipo.escudo_url || 'https://via.placeholder.com/150?text=AFE'}" alt="${equipo.nombre}">
+                    </div>
+                    <div class="info">
+                        <span class="nombre-equipo">${equipo.nombre}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
 
-                if (error) throw error;
+        function filtrar(categoria) {
+            // Cambiar estado visual de las pestañas
+            const botones = document.querySelectorAll('.tab-btn');
+            botones.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
 
-                loader.style.display = 'none';
-
-                if (equipos && equipos.length > 0) {
-                    equipos.forEach(equipo => {
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        
-                        // Placeholder si no hay escudo
-                        const imgUrl = equipo.escudo_url || 'https://via.placeholder.com/200/ff8c00/FFFFFF?text=' + equipo.nombre.charAt(0).toUpperCase();
-
-                        card.innerHTML = `
-                            <div class="img-box">
-                                <img src="${imgUrl}" alt="${equipo.nombre}" loading="lazy">
-                            </div>
-                            <div class="info">
-                                <span class="nombre-equipo">${equipo.nombre}</span>
-                                <span class="categoria-badge">${equipo.categoria}</span>
-                            </div>
-                        `;
-                        container.appendChild(card);
-                    });
-                } else {
-                    loader.innerHTML = "No se encontraron equipos cargados.";
-                }
-
-            } catch (err) {
-                console.error('Error:', err);
-                loader.innerHTML = "Error al conectar con la liga.";
+            // Filtrar lógica
+            if (categoria === 'TODOS') {
+                mostrarEquipos(todosLosEquipos);
+            } else {
+                const filtrados = todosLosEquipos.filter(e => e.categoria === categoria);
+                mostrarEquipos(filtrados);
             }
         }
 
-        // Arrancar al cargar la página
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', cargarDatos);
     </script>
 </body>
 </html>
