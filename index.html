@@ -5,80 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AFE - Asociación Futsal Esquel</title>
     
-    <!-- Librería oficial de Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
         :root {
-            --azul-afe: #004687;
-            --gris-fondo: #f4f7f6;
+            /* Colores inspirados en el poster de fixture */
+            --naranja-afe: #ff8c00; /* Color vibrante de la barra superior del poster */
+            --naranja-suave: #fffaf0; /* Fondo naranja muy tenue para el cuerpo */
             --blanco: #ffffff;
-            --negro-suave: #2d3436;
+            --negro-suave: #333333;
+            --gris-texto: #666666;
+            --gris-borde: #eeeeee;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             margin: 0;
-            background-color: var(--gris-fondo);
+            background-color: var(--naranja-suave);
             color: var(--negro-suave);
         }
 
-        /* Header Estilo Premium */
+        /* Header con la barra naranja vibrante */
         header {
             background: var(--blanco);
-            padding: 2rem 1rem;
+            padding: 2rem 1.5rem;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-bottom: 5px solid var(--azul-afe);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            border-bottom: 6px solid var(--naranja-afe); /* Usamos el color de barra superior */
         }
 
         header h1 {
             margin: 0;
             font-size: 2.2rem;
             letter-spacing: -1px;
-            color: var(--azul-afe);
+            color: var(--naranja-afe); /* Título con el color principal */
+            text-transform: uppercase;
+            font-weight: 800;
         }
 
         header p {
-            margin: 5px 0 0;
-            color: #636e72;
-            font-weight: 500;
+            margin: 8px 0 0;
+            color: var(--gris-texto);
+            font-weight: 600;
+            font-size: 1rem;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 30px auto;
+            max-width: 1100px;
+            margin: 25px auto;
             padding: 0 20px;
         }
 
         /* Grid de Equipos (Responsive) */
         .grid-equipos {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 20px;
         }
 
-        /* Tarjeta Estilo TecnoStore Patagonia */
+        /* Tarjeta Estilo Premium TecnoStore, ahora con acentos naranja */
         .card {
             background: var(--blanco);
-            border-radius: 20px;
+            border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(0,0,0,0.03);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--gris-borde);
             display: flex;
             flex-direction: column;
         }
 
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+            border-color: rgba(255, 140, 0, 0.2); /* Borde naranja tenue al hover */
         }
 
         /* Contenedor de Imagen (Escudos) */
         .img-box {
-            aspect-ratio: 1 / 1;
-            padding: 20px;
+            aspect-ratio: 1 / 1; /* Cuadrado para los escudos */
+            padding: 18px;
             background: #fff;
             display: flex;
             align-items: center;
@@ -89,22 +96,22 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.05));
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.04));
         }
 
-        /* Info del Equipo */
+        /* Info del Equipo con acento naranja */
         .info {
             padding: 15px;
             text-align: center;
             background: #fafafa;
-            border-top: 1px solid #f0f0f0;
+            border-top: 1px solid var(--gris-borde);
             flex-grow: 1;
         }
 
         .nombre-equipo {
-            font-weight: 800;
-            font-size: 0.95rem;
-            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
             display: block;
             text-transform: uppercase;
             color: var(--negro-suave);
@@ -112,21 +119,23 @@
 
         .categoria-badge {
             display: inline-block;
-            background: var(--azul-afe);
+            background: var(--naranja-afe); /* Usamos el color de barra superior */
             color: white;
-            font-size: 0.7rem;
-            padding: 4px 12px;
+            font-size: 0.65rem;
+            padding: 3px 12px;
             border-radius: 50px;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* Pantalla de carga */
         #loader {
             text-align: center;
-            padding: 100px 0;
+            padding: 90px 0;
             font-weight: 600;
-            color: var(--azul-afe);
+            color: var(--naranja-afe);
+            font-size: 1.1rem;
         }
 
         /* Adaptación para móviles */
@@ -135,7 +144,10 @@
                 grid-template-columns: repeat(2, 1fr); /* 2 columnas en celular */
                 gap: 15px;
             }
-            header h1 { font-size: 1.8rem; }
+            header h1 { font-size: 1.7rem; }
+            header p { font-size: 0.9rem; }
+            .nombre-equipo { font-size: 0.85rem; }
+            .categoria-badge { font-size: 0.6rem; }
         }
     </style>
 </head>
@@ -147,7 +159,7 @@
     </header>
 
     <div class="container">
-        <div id="loader">Conectando con la liga...</div>
+        <div id="loader">Cargando la liga...</div>
         <div class="grid-equipos" id="lista-equipos"></div>
     </div>
 
@@ -164,11 +176,10 @@
             const loader = document.getElementById('loader');
 
             try {
-                // Obtener datos de Supabase
+                // Obtener datos de Supabase, ordenados por nombre
                 const { data: equipos, error } = await _supabase
                     .from('equipos')
                     .select('*')
-                    .order('categoria', { ascending: true })
                     .order('nombre', { ascending: true });
 
                 if (error) throw error;
@@ -180,8 +191,8 @@
                         const card = document.createElement('div');
                         card.className = 'card';
                         
-                        // Si no hay escudo_url, usamos un placeholder genérico
-                        const imgUrl = equipo.escudo_url || 'https://via.placeholder.com/200/004687/FFFFFF?text=' + equipo.nombre.charAt(0);
+                        // Si no hay escudo_url, usamos un placeholder genérico con inicial
+                        const imgUrl = equipo.escudo_url || 'https://via.placeholder.com/200/ff8c00/FFFFFF?text=' + equipo.nombre.charAt(0).toUpperCase();
 
                         card.innerHTML = `
                             <div class="img-box">
@@ -195,12 +206,12 @@
                         container.appendChild(card);
                     });
                 } else {
-                    loader.innerHTML = "No se encontraron equipos cargados.";
+                    loader.innerHTML = "Aún no hay equipos registrados.";
                 }
 
             } catch (err) {
                 console.error('Error:', err);
-                loader.innerHTML = "Error al cargar los datos. Revisa la consola.";
+                loader.innerHTML = "Error de conexión. Inténtalo más tarde.";
             }
         }
 
