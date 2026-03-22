@@ -1,1 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFE - Asociación Futsal Esquel</title>
+    
+    <!-- Librería oficial de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        :root {
+            --azul-afe: #004687;
+            --gris-fondo: #f4f7f6;
+            --blanco: #ffffff;
+            --negro-suave: #2d3436;
+        }
 
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            background-color: var(--gris-fondo);
+            color: var(--negro-suave);
+        }
+
+        /* Header Estilo Premium */
+        header {
+            background: var(--blanco);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-bottom: 5px solid var(--azul-afe);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            letter-spacing: -1px;
+            color: var(--azul-afe);
+        }
+
+        header p {
+            margin: 5px 0 0;
+            color: #636e72;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Grid de Equipos (Responsive) */
+        .grid-equipos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 25px;
+        }
+
+        /* Tarjeta Estilo TecnoStore Patagonia */
+        .card {
+            background: var(--blanco);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        /* Contenedor de Imagen (Escudos) */
+        .img-box {
+            aspect-ratio: 1 / 1;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .img-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.05));
+        }
+
+        /* Info del Equipo */
+        .info {
+            padding: 15px;
+            text-align: center;
+            background: #fafafa;
+            border-top: 1px solid #f0f0f0;
+            flex-grow: 1;
+        }
+
+        .nombre-equipo {
+            font-weight: 800;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: block;
+            text-transform: uppercase;
+            color: var(--negro-suave);
+        }
+
+        .categoria-badge {
+            display: inline-block;
+            background: var(--azul-afe);
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Pantalla de carga */
+        #loader {
+            text-align: center;
+            padding: 100px 0;
+            font-weight: 600;
+            color: var(--azul-afe);
+        }
+
+        /* Adaptación para móviles */
+        @media (max-width: 480px) {
+            .grid-equipos {
+                grid-template-columns: repeat(2, 1fr); /* 2 columnas en celular */
+                gap: 15px;
+            }
+            header h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>AFE ESQUEL</h1>
+        <p>Asociación Futsal Esquel</p>
+    </header>
+
+    <div class="container">
+        <div id="loader">Conectando con la liga...</div>
+        <div class="grid-equipos" id="lista-equipos"></div>
+    </div>
+
+    <script>
+        // Tus credenciales de Supabase
+        const SUPABASE_URL = 'https://zycbdurfowmflttkrxaf.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_6O7PzB02VgmvuRc2pmz8UA_wferbeGH';
+        
+        // Inicializar Cliente
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function init() {
+            const container = document.getElementById('lista-equipos');
+            const loader = document.getElementById('loader');
+
+            try {
+                // Obtener datos de Supabase
+                const { data: equipos, error } = await _supabase
+                    .from('equipos')
+                    .select('*')
+                    .order('categoria', { ascending: true })
+                    .order('nombre', { ascending: true });
+
+                if (error) throw error;
+
+                loader.style.display = 'none';
+
+                if (equipos && equipos.length > 0) {
+                    equipos.forEach(equipo => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        
+                        // Si no hay escudo_url, usamos un placeholder genérico
+                        const imgUrl = equipo.escudo_url || 'https://via.placeholder.com/200/004687/FFFFFF?text=' + equipo.nombre.charAt(0);
+
+                        card.innerHTML = `
+                            <div class="img-box">
+                                <img src="${imgUrl}" alt="${equipo.nombre}" loading="lazy">
+                            </div>
+                            <div class="info">
+                                <span class="nombre-equipo">${equipo.nombre}</span>
+                                <span class="categoria-badge">${equipo.categoria}</span>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    loader.innerHTML = "No se encontraron equipos cargados.";
+                }
+
+            } catch (err) {
+                console.error('Error:', err);
+                loader.innerHTML = "Error al cargar los datos. Revisa la consola.";
+            }
+        }
+
+        // Arrancar al cargar la página
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
