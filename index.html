@@ -3,57 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AFE</title>
+    <title>AFE - Asociación Futsal Esquel</title>
     
-    
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
         :root {
-            /* Colores inspirados en el poster de fixture */
-            --naranja-afe: #ff8c00; /* Color vibrante de la barra superior del poster */
-            --naranja-suave: #fffaf0; /* Fondo naranja muy tenue para el cuerpo */
+            /* Colores inspirados en el poster de fixture (image_0.png) */
+            --naranja-afe: #ff8c00; /* Color vibrante de la barra superior */
+            --naranja-oscuro: #e67e00; /* Para estados hover en el menú */
+            --gris-fondo: #fcfcfc;
             --blanco: #ffffff;
-            --negro-suave: #333333;
-            --gris-texto: #666666;
+            --negro-suave: #2d3436;
             --gris-borde: #eeeeee;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             margin: 0;
-            background-color: var(--naranja-suave);
+            background-color: var(--gris-fondo);
             color: var(--negro-suave);
+            padding-bottom: 50px; /* Espacio para el menú móvil */
         }
 
-        /* Header con la barra naranja vibrante */
-        header {
+        /* --- HEADER PRINCIPAL --- */
+        header.main-header {
             background: var(--blanco);
-            padding: 2rem 1.5rem;
+            padding: 1.5rem 1rem;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            border-bottom: 6px solid var(--naranja-afe); /* Usamos el color de barra superior */
+            border-bottom: 1px solid var(--gris-borde);
         }
 
-        header h1 {
+        header.main-header h1 {
             margin: 0;
-            font-size: 2.2rem;
+            font-size: 2rem;
             letter-spacing: -1px;
-            color: var(--naranja-afe); /* Título con el color principal */
+            color: var(--naranja-afe);
             text-transform: uppercase;
             font-weight: 800;
         }
 
-        header p {
-            margin: 8px 0 0;
-            color: var(--gris-texto);
-            font-weight: 600;
-            font-size: 1rem;
+        header.main-header p {
+            margin: 5px 0 0;
+            color: #636e72;
+            font-weight: 500;
+            font-size: 0.9rem;
         }
 
+        /* --- BARRA DE NAVEGACIÓN (PESTAÑAS) - ESCRITORIO --- */
+        nav.main-nav {
+            background-color: var(--blanco);
+            border-bottom: 4px solid var(--naranja-afe); /* Barra naranja inferior */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .nav-tabs {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .nav-tabs li a {
+            display: block;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: var(--negro-suave);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* Estado Hover y Activo */
+        .nav-tabs li a:hover,
+        .nav-tabs li a.active {
+            color: var(--naranja-afe);
+        }
+
+        .nav-tabs li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; /* Alineado con el borde inferior */
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--naranja-afe);
+        }
+
+        /* --- MENÚ MÓVIL (BOTTOM BAR) --- */
+        .mobile-nav {
+            display: none; /* Oculto en escritorio */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--blanco);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            border-top: 1px solid var(--gris-borde);
+        }
+
+        .mobile-nav-container {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .mobile-nav-item {
+            text-decoration: none;
+            color: var(--gris-texto);
+            text-align: center;
+            flex: 1;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--naranja-afe);
+        }
+
+        /* Iconos simples (usando texto para no depender de librerías) */
+        .mobile-icon {
+            font-size: 1.4rem;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
         .container {
-            max-width: 1100px;
-            margin: 25px auto;
+            max-width: 1200px;
+            margin: 30px auto;
             padding: 0 20px;
         }
 
@@ -61,31 +155,29 @@
         .grid-equipos {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-            gap: 20px;
+            gap: 25px;
         }
 
-        /* Tarjeta Estilo Premium TecnoStore, ahora con acentos naranja */
+        /* Tarjeta Estilo TecnoStore */
         .card {
             background: var(--blanco);
-            border-radius: 18px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid var(--gris-borde);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0,0,0,0.03);
             display: flex;
             flex-direction: column;
         }
 
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-            border-color: rgba(255, 140, 0, 0.2); /* Borde naranja tenue al hover */
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
         }
 
-        /* Contenedor de Imagen (Escudos) */
         .img-box {
-            aspect-ratio: 1 / 1; /* Cuadrado para los escudos */
-            padding: 18px;
+            aspect-ratio: 1 / 1;
+            padding: 20px;
             background: #fff;
             display: flex;
             align-items: center;
@@ -96,22 +188,20 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.04));
         }
 
-        /* Info del Equipo con acento naranja */
         .info {
             padding: 15px;
             text-align: center;
             background: #fafafa;
-            border-top: 1px solid var(--gris-borde);
+            border-top: 1px solid #f0f0f0;
             flex-grow: 1;
         }
 
         .nombre-equipo {
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 6px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
             display: block;
             text-transform: uppercase;
             color: var(--negro-suave);
@@ -119,47 +209,82 @@
 
         .categoria-badge {
             display: inline-block;
-            background: var(--naranja-afe); /* Usamos el color de barra superior */
+            background: var(--naranja-afe);
             color: white;
-            font-size: 0.65rem;
-            padding: 3px 12px;
+            font-size: 0.7rem;
+            padding: 4px 12px;
             border-radius: 50px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         /* Pantalla de carga */
         #loader {
             text-align: center;
-            padding: 90px 0;
+            padding: 100px 0;
             font-weight: 600;
             color: var(--naranja-afe);
-            font-size: 1.1rem;
         }
 
-        /* Adaptación para móviles */
-        @media (max-width: 480px) {
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            header.main-header { padding: 1rem; }
+            header.main-header h1 { font-size: 1.6rem; }
+            
+            nav.main-nav { display: none; } /* Ocultar menú escritorio */
+            .mobile-nav { display: block; } /* Mostrar menú móvil */
+            
+            .container { margin: 20px auto; padding: 0 15px; }
             .grid-equipos {
-                grid-template-columns: repeat(2, 1fr); /* 2 columnas en celular */
+                grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
             }
-            header h1 { font-size: 1.7rem; }
-            header p { font-size: 0.9rem; }
-            .nombre-equipo { font-size: 0.85rem; }
-            .categoria-badge { font-size: 0.6rem; }
         }
     </style>
 </head>
 <body>
 
-    <header>
+    <header class="main-header">
         <h1>AFE ESQUEL</h1>
         <p>Asociación Futsal Esquel</p>
     </header>
 
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-tabs">
+                <li><a href="index.html" class="active">Inicio</a></li>
+                <li><a href="#">Torneos</a></li>
+                <li><a href="#">Fixture</a></li>
+                <li><a href="#">Equipos</a></li>
+                <li><a href="#">Noticias</a></li>
+                <li><a href="#">Institucional</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <nav class="mobile-nav">
+        <div class="mobile-nav-container">
+            <a href="index.html" class="mobile-nav-item active">
+                <span class="mobile-icon">🏠</span>
+                Inicio
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <span class="mobile-icon">🏆</span>
+                Torneos
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <span class="mobile-icon">📅</span>
+                Fixture
+            </a>
+            <a href="#" class="mobile-nav-item">
+                <span class="mobile-icon">🛡️</span>
+                Equipos
+            </a>
+        </div>
+    </nav>
+
     <div class="container">
-        <div id="loader">Cargando la liga...</div>
+        <div id="loader">Cargando equipos...</div>
         <div class="grid-equipos" id="lista-equipos"></div>
     </div>
 
@@ -176,10 +301,11 @@
             const loader = document.getElementById('loader');
 
             try {
-                // Obtener datos de Supabase, ordenados por nombre
+                // Obtener datos de Supabase
                 const { data: equipos, error } = await _supabase
                     .from('equipos')
                     .select('*')
+                    .order('categoria', { ascending: true })
                     .order('nombre', { ascending: true });
 
                 if (error) throw error;
@@ -191,7 +317,7 @@
                         const card = document.createElement('div');
                         card.className = 'card';
                         
-                        // Si no hay escudo_url, usamos un placeholder genérico con inicial
+                        // Placeholder si no hay escudo
                         const imgUrl = equipo.escudo_url || 'https://via.placeholder.com/200/ff8c00/FFFFFF?text=' + equipo.nombre.charAt(0).toUpperCase();
 
                         card.innerHTML = `
@@ -206,12 +332,12 @@
                         container.appendChild(card);
                     });
                 } else {
-                    loader.innerHTML = "Aún no hay equipos registrados.";
+                    loader.innerHTML = "No se encontraron equipos cargados.";
                 }
 
             } catch (err) {
                 console.error('Error:', err);
-                loader.innerHTML = "Error de conexión. Inténtalo más tarde.";
+                loader.innerHTML = "Error al conectar con la liga.";
             }
         }
 
